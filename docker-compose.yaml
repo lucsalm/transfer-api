@@ -1,0 +1,52 @@
+version: "3.7"
+
+services:
+  api:
+    image: lucasalmdsilva/transfer-api:latest
+    pull_policy: always
+    hostname: api
+    depends_on:
+      - db
+      - kafka
+    environment:
+      - HOST_DB=db
+      - HOST_KAFKA=kafka
+#      - INTEGRATIONS_MOCKY_ENDPOINT_AUTHORIZATION=
+#      - INTEGRATIONS_MOCKY_ENDPOINT_NOTIFICATION=
+    ports:
+      - "8080:8080"
+  db:
+    image: postgres:16.2-alpine
+    hostname: db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=bank
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./script.sql:/docker-entrypoint-initdb.d/script.sql
+
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka
+    restart: on-failure
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092 #PLAINTEXT://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "notification"

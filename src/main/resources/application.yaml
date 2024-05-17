@@ -1,0 +1,31 @@
+server:
+  port: 8080
+host:
+  db: localhost
+  kafka: localhost
+
+spring:
+  application:
+    name: transaction
+  r2dbc:
+    url: r2dbc:postgresql://${host.db}:5432/bank
+    username: admin
+    password: 123
+logging:
+  level:
+    org:
+      springframework:
+        data:
+          r2dbc: DEBUG
+integrations:
+  mocky:
+    url: https://run.mocky.io/v3
+    endpoint:
+      authorization: /f87c993d-eac1-4f89-b9e3-98b9da26423f
+      notification: /7569ed37-c47c-4f0e-b62f-5f4d91bc3c7b
+
+kafka:
+  server:
+    url: ${host.kafka}:9092
+    topic: notification
+    group: notification-consumer
