@@ -57,4 +57,4 @@ Tanto para a implementação de lógica da API, como para comunicação com o ba
 
 
 **Observações:**
-- Certifique-se de que as portas `8080`, `9092` e `5432` não estão sendo utilizadas por outra aplicação em seu sistema para evitar conflitos. Se necessário, você pode modificar o mapeamento de porta no arquivo [docker-compose.yml](docker-compose.yaml).
+- Certifique-se de que as portas `8080`, `9092` e `5432` não estão sendo utilizadas por outra aplicação em seu sistema para evitar conflitos. Se necessário, você pode modificar o mapeamento de porta no arquivo [docker-compose.yaml](docker-compose.yaml).
