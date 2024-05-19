@@ -5,7 +5,7 @@ import com.lucasalmd.transfer.domain.models.Transfer;
 import com.lucasalmd.transfer.domain.exceptions.BusinessException;
 import com.lucasalmd.transfer.domain.exceptions.Message;
 import com.lucasalmd.transfer.providers.integrations.MockyClient;
-import com.lucasalmd.transfer.providers.kafka.NotificationProducer;
+import com.lucasalmd.transfer.providers.producer.NotificationProducer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
