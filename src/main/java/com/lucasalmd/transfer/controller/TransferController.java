@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -20,12 +20,12 @@ import reactor.core.publisher.Mono;
 
 @Validated
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/transfer")
 @Tag(name = "TransferController", description = "Operations related with transfers between accounts")
 public class TransferController {
 
-    @Autowired
-    private TransferService service;
+    private final TransferService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

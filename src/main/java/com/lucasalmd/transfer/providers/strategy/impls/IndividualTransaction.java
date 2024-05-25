@@ -1,12 +1,12 @@
 package com.lucasalmd.transfer.providers.strategy.impls;
 
-import com.lucasalmd.transfer.domain.models.Transfer;
 import com.lucasalmd.transfer.domain.dtos.TransferDTO;
 import com.lucasalmd.transfer.domain.entities.Account;
 import com.lucasalmd.transfer.domain.entities.Transaction;
 import com.lucasalmd.transfer.domain.enums.TypeEnum;
 import com.lucasalmd.transfer.domain.exceptions.BusinessException;
-import com.lucasalmd.transfer.domain.exceptions.Message;
+import com.lucasalmd.transfer.domain.exceptions.ErrorMessage;
+import com.lucasalmd.transfer.domain.models.Transfer;
 import com.lucasalmd.transfer.providers.strategy.TransactionStrategy;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -25,7 +25,7 @@ public class IndividualTransaction implements TransactionStrategy {
         Account payee = transferRequestDTO.payee();
 
         if (!hasBalanceToTransaction(payer.getBalance(), value))
-            return Mono.error(new BusinessException(Message.PAYER_BALANCE_INVALID));
+            return Mono.error(new BusinessException(ErrorMessage.PAYER_BALANCE_INVALID));
 
         Transaction transaction = new Transaction();
 

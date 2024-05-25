@@ -5,35 +5,36 @@ import com.lucasalmd.transfer.controller.payload.TransferResponse;
 import com.lucasalmd.transfer.domain.dtos.TransferDTO;
 import com.lucasalmd.transfer.domain.entities.Account;
 import com.lucasalmd.transfer.domain.entities.Transaction;
+import com.lucasalmd.transfer.domain.exceptions.BusinessException;
+import com.lucasalmd.transfer.domain.exceptions.ErrorMessage;
 import com.lucasalmd.transfer.domain.models.Transfer;
 import com.lucasalmd.transfer.domain.models.Transfer.TransferBuilder;
-import com.lucasalmd.transfer.domain.exceptions.BusinessException;
-import com.lucasalmd.transfer.domain.exceptions.Message;
 import com.lucasalmd.transfer.providers.repository.AccountRepository;
 import com.lucasalmd.transfer.providers.repository.TransactionRepository;
 import com.lucasalmd.transfer.providers.strategy.factory.TypeTransactionFactory;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
-@Service
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class TransferService {
 
-    @Autowired
-    private AccountRepository accountRepository;
-    @Autowired
-    private TransactionRepository transactionRepository;
-    @Autowired
-    private TypeTransactionFactory transactionFactory;
-    @Autowired
-    private NotificationService notificationService;
-    @Autowired
-    private AuthorizationService authorizationService;
+    
+    private final  AccountRepository accountRepository;
+    
+    private final  TransactionRepository transactionRepository;
+    
+    private final  TypeTransactionFactory transactionFactory;
+    
+    private final  NotificationService notificationService;
+    
+    private final  AuthorizationService authorizationService;
 
 
     @Transactional
@@ -46,13 +47,13 @@ public class TransferService {
                 .map(this::createTransferResponse);
     }
 
-    private Mono<TransferDTO> buildTransferDTO(TransferRequest transferRequest) {
+    private final  Mono<TransferDTO> buildTransferDTO(TransferRequest transferRequest) {
         return Mono.just(TransferDTO.builder().value(transferRequest.value()))
                 .flatMap(transferDTOBuilder ->
                         this.getAccounts(transferRequest.payer(), transferRequest.payee())
                                 .flatMap(accounts -> {
                                     if (accounts.size() != 2) {
-                                        return Mono.error(new BusinessException(Message.TRANSFER_ACCOUNTS_NOT_FOUND));
+                                        return Mono.error(new BusinessException(ErrorMessage.TRANSFER_ACCOUNTS_NOT_FOUND));
                                     }
                                     transferDTOBuilder.payer(accounts.get(0));
                                     transferDTOBuilder.payee(accounts.get(1));
@@ -62,22 +63,22 @@ public class TransferService {
 
     }
 
-    private Mono<List<Account>> getAccounts(Integer payerId, Integer payeeId) {
+    private final  Mono<List<Account>> getAccounts(Integer payerId, Integer payeeId) {
         return accountRepository.findAllById(List.of(payerId, payeeId))
                 .collectList()
                 .map(accounts -> accounts.stream().distinct().toList());
     }
 
-    private Mono<Transfer> createTransfer(TransferDTO transferDTO) {
+    private final  Mono<Transfer> createTransfer(TransferDTO transferDTO) {
         return transactionFactory.getStrategy(transferDTO.payer())
                 .createTransfer(transferDTO);
     }
 
-    private Mono<Transfer> authorizeTransfer(Transfer transfer) {
+    private final  Mono<Transfer> authorizeTransfer(Transfer transfer) {
         return authorizationService.authorize(transfer).thenReturn(transfer);
     }
 
-    private Mono<Transfer> saveTransfer(Transfer transfer) {
+    private final  Mono<Transfer> saveTransfer(Transfer transfer) {
         return Mono.just(Transfer.builder())
                 .flatMap(transactionBuilder ->
                         accountRepository.saveAll(List.of(transfer.payer(), transfer.payee()))
@@ -92,11 +93,11 @@ public class TransferService {
                 ).map(TransferBuilder::build);
     }
 
-    private Mono<Transfer> produceNotification(Transfer transfer) {
+    private final  Mono<Transfer> produceNotification(Transfer transfer) {
         return notificationService.produceNotification(transfer).thenReturn(transfer);
     }
 
-    private TransferResponse createTransferResponse(Transfer transfer) {
+    private final  TransferResponse createTransferResponse(Transfer transfer) {
         Transaction transaction = transfer.transaction();
         return new TransferResponse(transaction.getId(), transaction.getRealizedAt());
     }

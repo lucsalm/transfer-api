@@ -1,8 +1,6 @@
 package com.lucasalmd.transfer.domain.entities;
 
 import com.lucasalmd.transfer.domain.enums.TypeEnum;
-
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

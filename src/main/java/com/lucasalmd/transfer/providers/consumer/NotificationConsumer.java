@@ -2,8 +2,8 @@ package com.lucasalmd.transfer.providers.consumer;
 
 import com.lucasalmd.transfer.domain.models.Transfer;
 import com.lucasalmd.transfer.providers.service.NotificationService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.kafka.core.reactive.ReactiveKafkaConsumerTemplate;
@@ -13,13 +13,14 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class NotificationConsumer {
 
-    @Autowired
-    private ReactiveKafkaConsumerTemplate<String, Transfer> reactiveKafkaConsumerTemplate;
+    
+    private final  ReactiveKafkaConsumerTemplate<String, Transfer> reactiveKafkaConsumerTemplate;
 
-    @Autowired
-    private NotificationService notificationService;
+    
+    private final  NotificationService notificationService;
 
     @EventListener(ApplicationStartedEvent.class)
     public Flux<Void> listen() {

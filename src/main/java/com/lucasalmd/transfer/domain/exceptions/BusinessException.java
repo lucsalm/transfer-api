@@ -6,10 +6,10 @@ import lombok.Getter;
 @Getter
 public class BusinessException extends RuntimeException{
 
-    private final ErrorResponse response;
+    private final transient ErrorResponse response;
 
 
-    public BusinessException(Message message) {
+    public BusinessException(ErrorMessage message) {
         this.response = message.getErrorResponse();
     }
 }

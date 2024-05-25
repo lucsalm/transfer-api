@@ -1,7 +1,7 @@
 package com.lucasalmd.transfer.domain.dtos;
 
 import com.lucasalmd.transfer.domain.entities.Account;
-import lombok.*;
+import lombok.Builder;
 
 import java.math.BigDecimal;
 

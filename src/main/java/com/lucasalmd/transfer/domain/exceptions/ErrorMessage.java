@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum Message {
+public enum ErrorMessage {
 
 
     FIELD_IS_INVALID_FOR_TRANSFER("Request field '%s' is invalid for transfer", HttpStatus.BAD_REQUEST),
