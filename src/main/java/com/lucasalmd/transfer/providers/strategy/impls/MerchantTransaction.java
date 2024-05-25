@@ -6,12 +6,12 @@ import com.lucasalmd.transfer.domain.exceptions.BusinessException;
 import com.lucasalmd.transfer.domain.exceptions.ErrorMessage;
 import com.lucasalmd.transfer.domain.models.Transfer;
 import com.lucasalmd.transfer.providers.strategy.TransactionStrategy;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
 
 import static com.lucasalmd.transfer.domain.enums.TypeEnum.MERCHANT;
 
-@Service
+@Component
 public class MerchantTransaction implements TransactionStrategy {
     public Mono<Transfer> createTransfer(TransferDTO transferDTO) {
         return Mono.error(new BusinessException(ErrorMessage.PAYER_TYPE_IS_INVALID));
