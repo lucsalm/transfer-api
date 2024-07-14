@@ -1,4 +1,4 @@
-# Account API
+# Transfer API
 
 This document is available in [English](README-en.md), but it is also available in [Portuguese](README.md).
 
